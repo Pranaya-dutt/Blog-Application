@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymelef.org" lang="en">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Post</title>
+</head>
+<body>
+    <div class="head">
+        <h1>New/Edit Post</h1>
+    </div>
+    <div class="form-content">
+        <form action="#" th:action="@{/saveNewPost}" th:object="${post}" method="POST">
+            <input type="text" th:field="*{title}" id="title" placeholder="Title" required>
+<!--            <input type="text" th:field="*{tags}" id="tags" placeholder="Tags" required>-->
+            <textarea name="content" th:field="*{content}" placeholder="Please type your post content..."></textarea>
+            <button type="submit">Publish</button>
+        </form>
+    </div>
+</body>
+</html>
