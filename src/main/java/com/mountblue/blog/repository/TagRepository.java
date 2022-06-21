@@ -1,9 +1,9 @@
 package com.mountblue.blog.repository;
 
-import com.mountblue.blog.model.Post;
+import com.mountblue.blog.model.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PostRepository extends JpaRepository<Post, Integer> {
+public interface TagRepository extends JpaRepository<Tag, Integer> {
 }
