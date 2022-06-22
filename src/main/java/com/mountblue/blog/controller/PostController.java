@@ -30,20 +30,8 @@ public class PostController {
 
     @PostMapping("/saveNewPost")
     public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-
-        post.setAuthor("Pranaya");
-        post.setPublishedAt(timestamp);
-        post.setCreatedAt(timestamp);
-        post.setExcerpt(post.getContent().substring(0,30)+"...");
         postService.savePost(post);
-
-        tag.setCreatedAt(timestamp);
-        try {
-            tagService.saveTag(tag);
-        } catch (Exception e){
-            return "redirect:/newpost";
-        }
+        tagService.saveTag(tag);
         return "redirect:/newpost";
     }
 }
