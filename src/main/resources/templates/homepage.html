@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymelef.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="homepage.css">
+</head>
+<body>
+    <h1 align="left" id="heading">My Blog Application</h1>
+    <main id="blogs">
+        <article th:each="post : ${postList}">
+            <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
+                <h2 class="title" th:text="${post.title}">Post Title</h2>
+                <div class="timestamp">
+                    <span th:text="${post.author}"></span>,
+                    <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>
+                </div>
+                <p class="content" th:utext="${post.excerpt}"></p>
+            </a>
+        </article>
+    </main>
+</body>
+</html>

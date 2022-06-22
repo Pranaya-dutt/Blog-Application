@@ -1,7 +1,7 @@
 package com.mountblue.blog.model;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "posts")
@@ -18,13 +18,13 @@ public class Post {
     @Column(name = "author")
     private String author;
     @Column(name = "published_at")
-    private Timestamp publishedAt;
+    private Date publishedAt;
     @Column(name = "is_published")
     private boolean isPublished;
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Date createdAt;
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Date updatedAt;
 
     public int getId() {
         return id;
@@ -66,14 +66,6 @@ public class Post {
         this.author = author;
     }
 
-    public Timestamp getPublishedAt() {
-        return publishedAt;
-    }
-
-    public void setPublishedAt(Timestamp publishedAt) {
-        this.publishedAt = publishedAt;
-    }
-
     public boolean isPublished() {
         return isPublished;
     }
@@ -82,19 +74,27 @@ public class Post {
         isPublished = published;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(Date publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

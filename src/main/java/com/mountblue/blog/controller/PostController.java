@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import java.sql.Timestamp;
 
@@ -18,6 +19,12 @@ public class PostController {
     private PostService postService;
     @Autowired
     private TagService tagService;
+
+    @GetMapping("/")
+    public String viewHomePage(Model model){
+        model.addAttribute("postList", postService.getAllPosts());
+        return "homepage";
+    }
 
     @GetMapping("/newpost")
     public String addNewPost(Model postModel, Model tagModel){
@@ -33,5 +40,12 @@ public class PostController {
         postService.savePost(post);
         tagService.saveTag(tag);
         return "redirect:/newpost";
+    }
+
+    @GetMapping("/showPost/{id}")
+    public String showPost(@PathVariable (value = "id") int id, Model model){
+        Post post = postService.getPostById(id);
+        model.addAttribute("post", post);
+        return "blogpage";
     }
 }

@@ -1,8 +1,7 @@
 package com.mountblue.blog.model;
 
-
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "tags")
@@ -13,9 +12,9 @@ public class Tag {
     @Column(name = "name")
     private String name;
     @Column(name = "created_at")
-    private Timestamp createdAt;
+    private Date createdAt;
     @Column(name = "updated_at")
-    private Timestamp updatedAt;
+    private Date updatedAt;
 
     public int getId() {
         return id;
@@ -33,19 +32,19 @@ public class Tag {
         this.name = name;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Timestamp getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Timestamp updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
 }

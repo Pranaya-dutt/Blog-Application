@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 @Service
 public class TagServiceImpl implements TagService {
@@ -14,8 +15,8 @@ public class TagServiceImpl implements TagService {
 
     @Override
     public void saveTag(Tag tag){
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        tag.setCreatedAt(timestamp);
+        Date date = new Date(System.currentTimeMillis());
+        tag.setCreatedAt(date);
         try{
             this.tagRepository.save(tag);
         } catch (Exception e){
