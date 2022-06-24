@@ -9,8 +9,9 @@
     <h3 align="left" id="heading">My Blog Application</h3>
     <main id="post">
         <article>
+            <a th:href="@{/updatePost/{id}(id=${post.id})}" class="btn" > Update</a>
             <h1 align="center" id="title" th:text="${post.title}">Blog post title</h1>
-            <div class="blog-details">
+            <div align="center" class="blog-details">
                 <span th:text="${post.author}"></span>,
                 <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>
             </div>

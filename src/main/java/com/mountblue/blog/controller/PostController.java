@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import java.sql.Timestamp;
 
 @Controller
 public class PostController {
@@ -37,8 +36,8 @@ public class PostController {
 
     @PostMapping("/saveNewPost")
     public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
-        postService.savePost(post);
-        tagService.saveTag(tag);
+        postService.savePost(post, tag);
+        //tagService.saveTag(tag, post);
         return "redirect:/newpost";
     }
 
@@ -47,5 +46,14 @@ public class PostController {
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         return "blogpage";
+    }
+
+    @GetMapping("/updatePost/{id}")
+    public String updatePost(@PathVariable (value = "id") int id, Model model){
+        Post post = postService.getPostById(id);
+        //Tag tag = tagService.getTagById(id);
+        model.addAttribute("post", post);
+        //model.addAttribute("tag",tag);
+        return "updatepost";
     }
 }

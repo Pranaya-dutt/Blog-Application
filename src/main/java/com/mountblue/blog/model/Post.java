@@ -1,7 +1,9 @@
 package com.mountblue.blog.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -25,6 +27,14 @@ public class Post {
     private Date createdAt;
     @Column(name = "updated_at")
     private Date updatedAt;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
 
     public int getId() {
         return id;
@@ -96,5 +106,20 @@ public class Post {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
+    public void addTag(Tag tag){
+        if(tags==null){
+            tags=new ArrayList<>();
+        }
+        tags.add(tag);
     }
 }
