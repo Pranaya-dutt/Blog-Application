@@ -10,6 +10,7 @@ article{
     width : 40%;
     display : inline-block;
     border : 2px solid black;
+    word-wrap: break-word;
 }
 .card{
     text-decoration : none; color : black;

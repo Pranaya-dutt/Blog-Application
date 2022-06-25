@@ -22,9 +22,12 @@ public class PostServiceImpl implements PostService {
     public void savePost(Post post, Tag tag) {
         Date date = new Date(System.currentTimeMillis());
         post.setAuthor("Pranaya");
-        post.setPublishedAt(date);
         post.setCreatedAt(date);
-        post.setExcerpt(post.getContent().substring(0,150)+"...");
+        if(post.getContent().length()>150){
+            post.setExcerpt(post.getContent().substring(0,150)+"...");
+        } else {
+            post.setExcerpt(post.getContent());
+        }
 
         String tagName = tag.getName();
         String[] array = tagName.split(", ");
@@ -42,6 +45,37 @@ public class PostServiceImpl implements PostService {
         }
         postRepository.save(post);
     }
+
+    @Override
+    public void publishPost(Post post, Tag tag) {
+        Date date = new Date(System.currentTimeMillis());
+        post.setAuthor("Pranaya");
+        post.setPublished(true);
+        post.setPublishedAt(date);
+        post.setCreatedAt(date);
+        if (post.getContent().length() > 150) {
+            post.setExcerpt(post.getContent().substring(0, 150) + "...");
+        } else {
+            post.setExcerpt(post.getContent());
+        }
+
+        String tagName = tag.getName();
+        String[] array = tagName.split(", ");
+        for (String name : array) {
+            tag.addPost(post);
+            Tag tagDB = tagRepository.getTabByName(name);
+            if (tagDB == null) {
+                Tag newTag = new Tag();
+                newTag.setName(name);
+                newTag.setCreatedAt(date);
+                post.addTag(newTag);
+            } else {
+                post.addTag(tagDB);
+            }
+        }
+        postRepository.save(post);
+    }
+
 
     @Override
     public List<Post> getAllPosts() {

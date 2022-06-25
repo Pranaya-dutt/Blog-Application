@@ -37,8 +37,12 @@ public class PostController {
     @PostMapping("/saveNewPost")
     public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
         postService.savePost(post, tag);
-        //tagService.saveTag(tag, post);
-        return "redirect:/newpost";
+        return "redirect:/draftspage";
+    }
+    @PostMapping("/publishNewPost")
+    public String publishNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
+        postService.publishPost(post, tag);
+        return "redirect:/";
     }
 
     @GetMapping("/showPost/{id}")
@@ -55,5 +59,11 @@ public class PostController {
         model.addAttribute("post", post);
         //model.addAttribute("tag",tag);
         return "updatepost";
+    }
+
+    @GetMapping("/draftPage")
+    public String draftPage(Model model){
+        model.addAttribute("postList", postService.getAllPosts());
+        return "draftspage";
     }
 }
