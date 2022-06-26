@@ -36,6 +36,13 @@ public class Post {
     )
     private List<Tag> tags;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(
+            name = "post_comment",
+            referencedColumnName = "id"
+    )
+    private List<Comment> comments;
+
     public int getId() {
         return id;
     }
@@ -116,10 +123,25 @@ public class Post {
         this.tags = tags;
     }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+
     public void addTag(Tag tag){
         if(tags==null){
             tags=new ArrayList<>();
         }
         tags.add(tag);
+    }
+
+    public void addComment(Comment comment){
+        if(comments==null){
+            comments=new ArrayList<>();
+        }
+        comments.add(comment);
     }
 }

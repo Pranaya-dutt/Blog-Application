@@ -17,6 +17,33 @@
             </div>
             <p class="content" th:utext="${post.content}"></p>
         </article>
+
+        <article>
+            <form action="#" th:action="@{{id}/saveComment(id=${post.id})}" th:object="${comment}" method="post">
+                <input type="hidden" th:field = "${comment.id}"/>
+                <input type="text" name="name" th:value="${comment.name}" id="name" placeholder="Enter your name" required>
+                <input type="email" name="email" th:value="${comment.email}" id="email" placeholder="Enter your email" required>
+                <textarea name="text" th:field="*{text}" placeholder="Enter your comment here"></textarea><br>
+                <button type="submit" value="save">Save Comment</button>
+            </form>
+        </article>
+
+        <span th:each="comment : ${commentList}">
+            <article>
+                <span class="timestamp">
+                    <span th:text="${comment.name}"></span>,
+                    <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span>
+                </span>
+                <p class="content" th:utext="${comment.text}"></p>
+                <form th:action="@{/showPost/{postId}/updateComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                    <button type="submit" value="edit">Edit</button>
+                </form>
+                <form th:action="@{/showPost/{postId}/deleteComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                    <button type="submit" value="delete">Delete</button>
+                </form>
+            </article>
+        </span>
+
     </main>
 </body>
 </html>

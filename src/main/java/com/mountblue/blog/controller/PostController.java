@@ -1,7 +1,9 @@
 package com.mountblue.blog.controller;
 
+import com.mountblue.blog.model.Comment;
 import com.mountblue.blog.model.Post;
 import com.mountblue.blog.model.Tag;
+import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +14,18 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.List;
+
 @Controller
 public class PostController {
     @Autowired
     private PostService postService;
+
     @Autowired
     private TagService tagService;
+
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/")
     public String viewHomePage(Model model){
@@ -46,9 +54,13 @@ public class PostController {
     }
 
     @GetMapping("/showPost/{id}")
-    public String showPost(@PathVariable (value = "id") int id, Model model){
+    public String showPost(@PathVariable (value = "id") int id, Model model, Model commentModel){
         Post post = postService.getPostById(id);
+        Comment comment = new Comment();
+        List<Comment> commentList = commentService.getCommentListByPostId(id);
         model.addAttribute("post", post);
+        commentModel.addAttribute("comment", comment);
+        commentModel.addAttribute("commentList", commentList);
         return "blogpage";
     }
 

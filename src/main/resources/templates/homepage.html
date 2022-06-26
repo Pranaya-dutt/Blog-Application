@@ -9,8 +9,8 @@
     <h1 align="left" id="heading">My Blog Application</h1>
     <a th:href="@{/draftPage}">Drafts</a>
     <main id="blogs">
-        <div th:each="post : ${postList}">
-            <div th:if="${post.isPublished() == true}">
+        <span th:each="post : ${postList}">
+            <span th:if="${post.isPublished() == true}">
                 <article>
                     <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
                         <h2 class="title" th:text="${post.title}">Post Title</h2>
@@ -21,8 +21,8 @@
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>
                 </article>
-            </div>
-        </div>
+            </span>
+        </span>
     </main>
 </body>
 </html>

@@ -10,7 +10,7 @@
         <h1>New/Edit Post</h1>
     </div>
     <div class="form-content">
-        <form action="#" th:action="@{/saveNewPost}" th:object="${post}" method="POST">
+        <form action="#" th:action="@{/publishNewPost}" th:object="${post}" method="POST">
             <input type="hidden" th:field="*{id}"/>
             <input type="text" name="title" th:value="${post.title}" id="title" placeholder="Title" required>
             <input type="text" name="name" id="tag" placeholder="Tag" required>
