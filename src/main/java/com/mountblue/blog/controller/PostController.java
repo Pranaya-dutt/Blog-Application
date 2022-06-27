@@ -42,12 +42,24 @@ public class PostController {
 
     @PostMapping("/saveNewPost")
     public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
-        postService.savePost(post, tag);
-        return "redirect:/draftspage";
+        postService.saveNewPost(post, tag);
+        return "redirect:/draftPage";
     }
+
     @PostMapping("/publishNewPost")
     public String publishNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
-        postService.publishPost(post, tag);
+        postService.publishNewPost(post, tag);
+        return "redirect:/";
+    }
+
+    @PostMapping("/saveUpdatePost")
+    public String saveUpdatePost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
+        postService.saveUpdatePost(post, tag);
+        return "redirect:/draftPage";
+    }
+    @PostMapping("/publishUpdatePost")
+    public String publishUpdatePost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
+        postService.publishUpdatePost(post, tag);
         return "redirect:/";
     }
 
@@ -65,9 +77,19 @@ public class PostController {
     @GetMapping("/updatePost/{id}")
     public String updatePost(@PathVariable (value = "id") int id, Model model){
         Post post = postService.getPostById(id);
-        //Tag tag = tagService.getTagById(id);
         model.addAttribute("post", post);
-        //model.addAttribute("tag",tag);
+        Tag postTag = new Tag();
+        List<Tag> postTagList = post.getTags();
+        Tag tag1 = postTagList.get(0);
+        String allTags = tag1.getName();
+        for(int i=1; i<postTagList.size();i++){
+            Tag tag = postTagList.get(i);
+            String name = ", " + tag.getName();
+            allTags += name;
+        }
+        //System.out.println(allTags);
+        postTag.setName(allTags);
+        model.addAttribute("tag",postTag);
         return "updatepost";
     }
 

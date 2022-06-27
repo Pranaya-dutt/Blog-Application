@@ -18,11 +18,9 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private TagRepository tagRepository;
 
-    @Override
-    public void savePost(Post post, Tag tag) {
+    public void postSaver(Post post, Tag tag){
         Date date = new Date(System.currentTimeMillis());
         post.setAuthor("Pranaya");
-        post.setCreatedAt(date);
         if(post.getContent().length()>150){
             post.setExcerpt(post.getContent().substring(0,150)+"...");
         } else {
@@ -47,35 +45,51 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void publishPost(Post post, Tag tag) {
+    public void saveNewPost(Post post, Tag tag) {
         Date date = new Date(System.currentTimeMillis());
-        post.setAuthor("Pranaya");
-        post.setPublished(true);
-        post.setPublishedAt(date);
         post.setCreatedAt(date);
-        if (post.getContent().length() > 150) {
-            post.setExcerpt(post.getContent().substring(0, 150) + "...");
-        } else {
-            post.setExcerpt(post.getContent());
-        }
-
-        String tagName = tag.getName();
-        String[] array = tagName.split(", ");
-        for (String name : array) {
-            tag.addPost(post);
-            Tag tagDB = tagRepository.getTabByName(name);
-            if (tagDB == null) {
-                Tag newTag = new Tag();
-                newTag.setName(name);
-                newTag.setCreatedAt(date);
-                post.addTag(newTag);
-            } else {
-                post.addTag(tagDB);
-            }
-        }
-        postRepository.save(post);
+        postSaver(post,tag);
     }
 
+    @Override
+    public void publishNewPost(Post post, Tag tag) {
+        Post oldPost = getPostById(post.getId());
+        Date createDate = oldPost.getCreatedAt();
+        Date date = new Date(System.currentTimeMillis());
+        post.setCreatedAt(createDate);
+        post.setPublished(true);
+        post.setPublishedAt(date);
+        postSaver(post,tag);
+    }
+
+    @Override
+    public void saveUpdatePost(Post post, Tag tag) {
+        Post oldPost = getPostById(post.getId());
+        Date createDate = oldPost.getCreatedAt();
+        Date publishDate = oldPost.getPublishedAt();
+        Date date = new Date(System.currentTimeMillis());
+        post.setUpdatedAt(date);
+        post.setCreatedAt(createDate);
+        post.setPublishedAt(publishDate);
+        postSaver(post,tag);
+    }
+
+    @Override
+    public void publishUpdatePost(Post post, Tag tag) {
+        Post oldPost = getPostById(post.getId());
+        Date createDate = oldPost.getCreatedAt();
+        Date publishDate = oldPost.getPublishedAt();
+        Date date = new Date(System.currentTimeMillis());
+        post.setUpdatedAt(date);
+        post.setPublished(true);
+        post.setCreatedAt(createDate);
+        if(publishDate == null){
+            post.setPublishedAt(date);
+        } else {
+            post.setPublishedAt(publishDate);
+        }
+        postSaver(post,tag);
+    }
 
     @Override
     public List<Post> getAllPosts(String keyword) {

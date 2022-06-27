@@ -15,3 +15,10 @@ article{
 .card{
     text-decoration : none; color : black;
 }
+.header{
+    display: flex;
+    justify-content: spaced-evenly;
+}
+#search-form{
+    margin: 50px;
+}
