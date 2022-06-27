@@ -7,12 +7,10 @@ import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,8 +26,8 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String viewHomePage(Model model){
-        model.addAttribute("postList", postService.getAllPosts());
+    public String viewHomePage(Model model, @Param("keyword") String keyword){
+        model.addAttribute("postList", postService.getAllPosts(keyword));
         return "homepage";
     }
 
@@ -74,8 +72,8 @@ public class PostController {
     }
 
     @GetMapping("/draftPage")
-    public String draftPage(Model model){
-        model.addAttribute("postList", postService.getAllPosts());
+    public String draftPage(Model model, @Param("keyword") String keyword){
+        model.addAttribute("postList", postService.getAllPosts(keyword));
         return "draftspage";
     }
 }

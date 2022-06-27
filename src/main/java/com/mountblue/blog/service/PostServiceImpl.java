@@ -78,7 +78,10 @@ public class PostServiceImpl implements PostService {
 
 
     @Override
-    public List<Post> getAllPosts() {
+    public List<Post> getAllPosts(String keyword) {
+        if(keyword != null){
+            return postRepository.findAll(keyword);
+        }
         return postRepository.findAll();
     }
 

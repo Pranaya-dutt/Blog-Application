@@ -7,6 +7,10 @@
 </head>
 <body>
     <h1 align="left" id="heading">My Blog Application</h1>
+    <form th:action="@{/}">
+        <input type="text" name="keyword" placeholder="Search keyword">
+        <button type="submit">Search</button>
+    </form>
     <a th:href="@{/draftPage}">Drafts</a>
     <main id="blogs">
         <span th:each="post : ${postList}">
