@@ -9,9 +9,11 @@
     <div class="header">
         <h1 align="left" id="heading">My Blog Application</h1>
         <form id="search-form" th:action="@{/}">
-            <input type="text" name="keyword" placeholder="Search keyword">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
             <button type="submit">Search</button>
         </form>
+        <a th:href="@{'/page/' + ${currentPage} + '?keyword=' + ${keyword} + '&sortField=published_at&sortDir=' + ${reverseSortDir}}">Sort</a>
     </div>
     <a th:href="@{/draftPage}">Drafts</a>
     <main id="blogs">
@@ -22,7 +24,8 @@
                         <h2 class="title" th:text="${post.title}">Post Title</h2>
                         <div class="timestamp">
                             <span th:text="${post.author}"></span>,
-                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>
+<!--                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>-->
+                            <span th:text="${post.publishedAt.toString()}"></span>
                         </div>
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>
@@ -38,16 +41,16 @@
             </div>
             <div class="col">
                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                    <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?keyword=' + ${keyword}}">[[${i}]]</a>
+                    <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i} + '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">[[${i}]]</a>
                     <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
                 </span>
             </div>
             <div class="col">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?keyword=' + ${keyword}}">Next</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
                 <span th:unless="${currentPage < totalPages}">Next</span>
             </div>
             <div class="col">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?keyword=' + ${keyword}}">Last</a>
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
                 <span th:unless="${currentPage < totalPages}">Last</span>
             </div>
         </div>

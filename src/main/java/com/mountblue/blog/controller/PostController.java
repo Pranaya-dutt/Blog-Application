@@ -27,12 +27,14 @@ public class PostController {
     private CommentService commentService;
 
     @GetMapping("/")
-    public String viewHomePage(Model model, @Param("keyword") String keyword){
-//        model.addAttribute("postList", postService.getAllPosts(keyword));
-//        if(keyword == null){
-//            keyword = " ";
-//        }
-        return findPaginated(1,model,keyword);
+    public String viewHomePage(Model model, @Param("keyword") String keyword, @Param("sortDir") String sortDir){
+        if(keyword == null){
+            keyword = "";
+        }
+        if(sortDir == null){
+            sortDir = "asc";
+        }
+        return findPaginated(1,"published_at",sortDir,model,keyword);
     }
 
     @GetMapping("/draftPage")
@@ -42,15 +44,21 @@ public class PostController {
     }
 
     @GetMapping("/page/{pageNo}")
-    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model, String keyword){
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
+                                @RequestParam("sortField") String sortField,
+                                @RequestParam("sortDir") String sortDir,
+                                Model model,
+                                String keyword){
         int pageSize = 5;
-
-        Page<Post> page = postService.findPaginated(pageNo,pageSize,keyword);
+        Page<Post> page = postService.findPaginated(pageNo,pageSize,keyword,sortField,sortDir);
         List<Post> postList = page.getContent();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
         model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         model.addAttribute("postList", postList);
         model.addAttribute("keyword", keyword);
 
@@ -114,7 +122,6 @@ public class PostController {
             String name = ", " + tag.getName();
             allTags += name;
         }
-        //System.out.println(allTags);
         postTag.setName(allTags);
         model.addAttribute("tag",postTag);
         return "updatepost";
