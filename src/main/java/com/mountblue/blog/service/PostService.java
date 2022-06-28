@@ -2,6 +2,7 @@ package com.mountblue.blog.service;
 
 import com.mountblue.blog.model.Post;
 import com.mountblue.blog.model.Tag;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,4 +13,5 @@ public interface PostService {
     Post getPostById(int id);
     void saveUpdatePost(Post post, Tag tag);
     void publishUpdatePost(Post post, Tag tag);
+    Page<Post> findPaginated(int pageNo, int pageSize, String keyword);
 }

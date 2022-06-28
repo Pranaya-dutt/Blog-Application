@@ -7,6 +7,7 @@ import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,7 +28,32 @@ public class PostController {
 
     @GetMapping("/")
     public String viewHomePage(Model model, @Param("keyword") String keyword){
+//        model.addAttribute("postList", postService.getAllPosts(keyword));
+//        if(keyword == null){
+//            keyword = " ";
+//        }
+        return findPaginated(1,model,keyword);
+    }
+
+    @GetMapping("/draftPage")
+    public String draftPage(Model model, @Param("keyword") String keyword){
         model.addAttribute("postList", postService.getAllPosts(keyword));
+        return "draftspage";
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public String findPaginated(@PathVariable(value = "pageNo") int pageNo, Model model, String keyword){
+        int pageSize = 5;
+
+        Page<Post> page = postService.findPaginated(pageNo,pageSize,keyword);
+        List<Post> postList = page.getContent();
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", page.getTotalPages());
+        model.addAttribute("totalItems", page.getTotalElements());
+        model.addAttribute("postList", postList);
+        model.addAttribute("keyword", keyword);
+
         return "homepage";
     }
 
@@ -74,6 +100,7 @@ public class PostController {
         return "blogpage";
     }
 
+
     @GetMapping("/updatePost/{id}")
     public String updatePost(@PathVariable (value = "id") int id, Model model){
         Post post = postService.getPostById(id);
@@ -91,11 +118,5 @@ public class PostController {
         postTag.setName(allTags);
         model.addAttribute("tag",postTag);
         return "updatepost";
-    }
-
-    @GetMapping("/draftPage")
-    public String draftPage(Model model, @Param("keyword") String keyword){
-        model.addAttribute("postList", postService.getAllPosts(keyword));
-        return "draftspage";
     }
 }

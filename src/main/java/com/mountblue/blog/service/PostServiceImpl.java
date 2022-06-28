@@ -5,6 +5,9 @@ import com.mountblue.blog.model.Tag;
 import com.mountblue.blog.repository.PostRepository;
 import com.mountblue.blog.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
@@ -92,9 +95,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Page<Post> findPaginated(int pageNo, int pageSize, String keyword) {
+        Pageable pageable = PageRequest.of(pageNo-1,pageSize);
+        if(keyword != null){
+            return postRepository.findPaginatedBySearch(pageable,keyword);
+        }
+        return postRepository.findPaginatedAll(pageable);
+    }
+
+    @Override
     public List<Post> getAllPosts(String keyword) {
         if(keyword != null){
-            return postRepository.findAll(keyword);
+            return postRepository.findAllBySearch(keyword);
         }
         return postRepository.findAll();
     }

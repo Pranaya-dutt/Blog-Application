@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" href="homepage.css">
+    <link rel="stylesheet" th:href="@{/homepage.css}">
 </head>
 <body>
     <div class="header">
@@ -16,7 +16,7 @@
     <a th:href="@{/draftPage}">Drafts</a>
     <main id="blogs">
         <span th:each="post : ${postList}">
-            <span th:if="${post.isPublished() == true}">
+<!--            <span th:if="${post.isPublished() == true}">-->
                 <article>
                     <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
                         <h2 class="title" th:text="${post.title}">Post Title</h2>
@@ -27,8 +27,31 @@
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>
                 </article>
-            </span>
+<!--            </span>-->
         </span>
     </main>
+
+    <div th:if="${totalPages > 1}">
+        <div class="row">
+            <div class="col">
+                Total Rows: [[${totalItems}]]
+            </div>
+            <div class="col">
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/page/' + ${i}+ '?keyword=' + ${keyword}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+                </span>
+            </div>
+            <div class="col">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?keyword=' + ${keyword}}">Next</a>
+                <span th:unless="${currentPage < totalPages}">Next</span>
+            </div>
+            <div class="col">
+                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?keyword=' + ${keyword}}">Last</a>
+                <span th:unless="${currentPage < totalPages}">Last</span>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
