@@ -7,7 +7,7 @@
 article{
     margin : 50px;
     padding : 5px;
-    width : 40%;
+    width : 43%;
     display : inline-block;
     border : 2px solid black;
     word-wrap: break-word;
@@ -20,5 +20,46 @@ article{
     justify-content: spaced-evenly;
 }
 #search-form{
-    margin: 50px;
+    width:500px;
+    margin-top: 50px;
+    margin-right: 50px;
+}
+#sort-form{
+    width: 400px;
+    margin-top: 50px;
+    margin-right: 50px;
+}
+#filter-form{
+    width: 500px;
+    margin-top: 50px;
+    margin-right: 50px;
+}
+.row{
+    padding: 10px;
+    width: 99%;
+    border: 1px solid #2d2d2d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.col{
+    margin-left: 20px;
+    margin-right: 20px;
+}
+.btn{
+    width:60px;
+    padding: 5px;
+    border:1px solid black;
+    color: gray;
+    background-color:rgb(211,208,208);
+}
+.nxt{
+    padding-left: 20px;
+}
+.sort{
+    margin:50px;
+}
+.sortBtn{
+    margin-top: 10px;
+    margin-button: 10px;
 }

@@ -18,31 +18,34 @@
             <p class="content" th:utext="${post.content}"></p>
         </article>
 
-        <article>
-            <form action="#" th:action="@{{id}/saveComment(id=${post.id})}" th:object="${comment}" method="post">
+        <div>
+            <form id="comment-form" action="#" th:action="@{{id}/saveComment(id=${post.id})}" th:object="${comment}" method="post">
                 <input type="hidden" th:field = "${comment.id}"/>
-                <input type="text" name="name" th:value="${comment.name}" id="name" placeholder="Enter your name" required>
-                <input type="email" name="email" th:value="${comment.email}" id="email" placeholder="Enter your email" required>
-                <textarea name="text" th:field="*{text}" placeholder="Enter your comment here"></textarea><br>
-                <button type="submit" value="save">Save Comment</button>
+                <input type="text"  name="name" th:value="${comment.name}" id="name" placeholder="Enter your name" required><br>
+                <input type="email" name="email" th:value="${comment.email}" id="email" placeholder="Enter your email" required><br>
+                <textarea name="text" th:field="*{text}" id="text" placeholder="Enter your comment here"></textarea><br>
+                <button type="submit" id="savebtn" value="save">Save Comment</button>
             </form>
-        </article>
+        </div>
 
-        <span th:each="comment : ${commentList}">
-            <article>
-                <span class="timestamp">
-                    <span th:text="${comment.name}"></span>,
-                    <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span>
-                </span>
-                <p class="content" th:utext="${comment.text}"></p>
-                <form th:action="@{/showPost/{postId}/updateComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
-                    <button type="submit" value="edit">Edit</button>
-                </form>
-                <form th:action="@{/showPost/{postId}/deleteComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
-                    <button type="submit" value="delete">Delete</button>
-                </form>
-            </article>
-        </span>
+        <h3>Comment Section</h3>
+        <div class="comment-section">
+            <div th:each="comment : ${commentList}">
+                <div class="comment-box">
+                    <span class="timestamp">
+                        <b><span th:text="${comment.name}"></span>,
+                        <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span></b>
+                    </span>
+                    <p class="content" th:utext="${comment.text}"></p>
+                    <form th:action="@{/showPost/{postId}/updateComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                        <button type="submit" value="edit">Edit</button>
+                    </form>
+                    <form th:action="@{/showPost/{postId}/deleteComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                        <button type="submit" value="delete">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
 
     </main>
 </body>

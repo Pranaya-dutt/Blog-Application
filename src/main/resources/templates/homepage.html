@@ -13,9 +13,25 @@
             <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
             <button type="submit">Search</button>
         </form>
-        <a th:href="@{'/page/' + ${currentPage} + '?keyword=' + ${keyword} + '&sortField=published_at&sortDir=' + ${reverseSortDir}}">Sort</a>
+        <form id="sort-form" th:action="@{'/page/' + ${currentPage}}">
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <input type="hidden" name="sortField" th:value="published_at">
+            <select style="width:150px" id="sortDir" name="sortDir">
+                <option value="" disabled selected>Select order</option>
+                <option th:value="desc">Newest First</option>
+                <option th:value="asc">Oldest First</option>
+            </select>
+            <input type="submit" value="Sort">
+        </form>
+        <form id="filter-form" th:action="@{'/filter/' + ${currentPage}}">
+            <label>Select Filter Tags</label>
+            <select id="tagId" name="tagId" size="10" multiple>
+                <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
+            </select>
+            <input type="submit" value="Filter">
+        </form>
     </div>
-    <a th:href="@{/draftPage}">Drafts</a>
+<!--    <a th:href="@{/draftPage}">Drafts</a>-->
     <main id="blogs">
         <span th:each="post : ${postList}">
 <!--            <span th:if="${post.isPublished() == true}">-->
@@ -25,7 +41,7 @@
                         <div class="timestamp">
                             <span th:text="${post.author}"></span>,
 <!--                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>-->
-                            <span th:text="${post.publishedAt.toString()}"></span>
+<!--                            <span th:text="${post.publishedAt.toString()}"></span>-->
                         </div>
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>
@@ -36,8 +52,12 @@
 
     <div th:if="${totalPages > 1}">
         <div class="row">
-            <div class="col">
-                Total Rows: [[${totalItems}]]
+<!--            <div class="col">-->
+<!--                Total Rows: [[${totalItems}]]-->
+<!--            </div>-->
+            <div class="col btn">
+                <a th:if="${currentPage > 1}" th:href="@{'/page/' + ${currentPage - 1}+ '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Previous</a>
+                <span th:unless="${currentPage > 1}">Previous</span>
             </div>
             <div class="col">
                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
@@ -45,13 +65,9 @@
                     <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
                 </span>
             </div>
-            <div class="col">
+            <div class="col btn nxt">
                 <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${currentPage + 1}+ '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Next</a>
                 <span th:unless="${currentPage < totalPages}">Next</span>
-            </div>
-            <div class="col">
-                <a th:if="${currentPage < totalPages}" th:href="@{'/page/' + ${totalPages}+ '?keyword=' + ${keyword} + '&sortField=' + ${sortField} + '&sortDir=' + ${sortDir}}">Last</a>
-                <span th:unless="${currentPage < totalPages}">Last</span>
             </div>
         </div>
     </div>

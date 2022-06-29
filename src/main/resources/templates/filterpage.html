@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="https://www.thymelef.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" th:href="@{/homepage.css}">
+</head>
+<body>
+<div class="header">
+    <h1 align="left" id="heading">My Blog Application</h1>
+    <form id="search-form" th:action="@{/}">
+        <input type="hidden" name="sortDir" th:value="${sortDir}">
+        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
+        <button type="submit">Search</button>
+    </form>
+    <form id="sort-form" th:action="@{'/page/' + ${currentPage}}">
+        <input type="hidden" name="keyword" th:value="${keyword}">
+        <input type="hidden" name="sortField" th:value="published_at">
+        <select style="width:150px" id="sortDir" name="sortDir">
+            <option value="" disabled selected>Select order</option>
+            <option th:value="desc">Newest First</option>
+            <option th:value="asc">Oldest First</option>
+        </select>
+        <input type="submit" value="Sort">
+    </form>
+    <form id="filter-form" th:action="@{'/filter/' + ${pageNo}}">
+        <label>Select Filter Tags</label>
+        <select id="tagId" name="tagId" size="10" multiple>
+            <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
+        </select>
+        <input type="submit" value="Filter">
+    </form>
+</div>
+<!--    <a th:href="@{/draftPage}">Drafts</a>-->
+<main id="blogs">
+        <span th:each="post : ${postList}">
+<!--            <span th:if="${post.isPublished() == true}">-->
+                <article>
+                    <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
+                        <h2 class="title" th:text="${post.title}">Post Title</h2>
+                        <div class="timestamp">
+                            <span th:text="${post.author}"></span>,
+                            <!--                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>-->
+                            <!--                            <span th:text="${post.publishedAt.toString()}"></span>-->
+                        </div>
+                        <p class="content" th:utext="${post.excerpt}"></p>
+                    </a>
+                </article>
+            <!--            </span>-->
+        </span>
+</main>
+
+<div th:if="${totalPages > 1}">
+    <div class="row">
+        <!--            <div class="col">-->
+        <!--                Total Rows: [[${totalItems}]]-->
+        <!--            </div>-->
+        <div class="col btn">
+            <a th:if="${currentPage > 1}" th:href="@{'/filter/' + ${currentPage - 1} + ${filterString}}">Previous</a>
+            <span th:unless="${currentPage > 1}">Previous</span>
+        </div>
+        <div class="col">
+                <span th:each="i: ${#numbers.sequence(1, totalPages)}">
+                    <a th:if="${currentPage != i}" th:href="@{'/filter/' + ${i} + ${filterString}}">[[${i}]]</a>
+                    <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
+                </span>
+        </div>
+        <div class="col btn nxt">
+            <a th:if="${currentPage < totalPages}" th:href="@{'/filter/' + ${currentPage + 1}+ ${filterString}}">Next</a>
+            <span th:unless="${currentPage < totalPages}">Next</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

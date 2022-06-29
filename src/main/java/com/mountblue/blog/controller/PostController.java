@@ -7,12 +7,14 @@ import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -43,6 +45,66 @@ public class PostController {
         return "draftspage";
     }
 
+    @GetMapping("/filter/{pageNo}")
+    public String findFilteredPaginated(@PathVariable(value = "pageNo") int pageNo,
+                                        @RequestParam(value = "tagId",defaultValue = "") List<Integer> filterTags,
+//                                        @RequestParam("sortField") String sortField,
+//                                        @RequestParam("sortDir") String sortDir,
+                                        Model model,
+                                        String keyword){
+        // [5,6,7,8,9,10,11]
+        int pageSize = 5;
+
+        List<Tag> tagList = tagService.getAllTags();
+        List<Post> filteredPostList = new java.util.ArrayList<>(Collections.emptyList());
+        for(Integer tagId : filterTags){
+            Tag tag = tagService.getTagById(tagId);
+            List<Post> postByTag = tag.getPosts();
+            for(Post post : postByTag){
+                if(!filteredPostList.contains(post) && post.isPublished()){
+                    filteredPostList.add(post);
+                }
+            }
+        }
+
+//        for (Post post : filteredPostList){
+//            System.out.println(post.getTitle());
+//        }
+
+        PagedListHolder<Post> pagedListHolder = new PagedListHolder<>(filteredPostList);
+        pagedListHolder.setPageSize(pageSize);
+        pagedListHolder.setPage(pageNo-1);
+        List<Post> postList = pagedListHolder.getPageList();
+
+//        for (Post post : postList){
+//            System.out.println(post.getTitle());
+//        }
+        String filterString = "";
+        if(!filterTags.isEmpty()){
+            filterString = "?tagId=" + filterTags.get(0);
+            for(int i = 1; i<filterTags.size();i++){
+                filterString += "&tagId=" + filterTags.get(i);
+            }
+            System.out.println(filterString);
+        }
+
+
+
+        model.addAttribute("currentPage", pageNo);
+        model.addAttribute("totalPages", pagedListHolder.getPageCount());
+        model.addAttribute("totalItems", pagedListHolder.getNrOfElements());
+//        model.addAttribute("sortField", sortField);
+//        model.addAttribute("sortDir", sortDir);
+//        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("tagList", tagList);
+        model.addAttribute("postList", postList);
+        model.addAttribute("filterString", filterString);
+//        model.addAttribute("filtertags", filterTags);
+
+        return "filterpage";
+    }
+
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
                                 @RequestParam("sortField") String sortField,
@@ -52,6 +114,7 @@ public class PostController {
         int pageSize = 5;
         Page<Post> page = postService.findPaginated(pageNo,pageSize,keyword,sortField,sortDir);
         List<Post> postList = page.getContent();
+        List<Tag> tagList = tagService.getAllTags();
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", page.getTotalPages());
@@ -59,8 +122,9 @@ public class PostController {
         model.addAttribute("sortField", sortField);
         model.addAttribute("sortDir", sortDir);
         model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
-        model.addAttribute("postList", postList);
         model.addAttribute("keyword", keyword);
+        model.addAttribute("tagList", tagList);
+        model.addAttribute("postList", postList);
 
         return "homepage";
     }

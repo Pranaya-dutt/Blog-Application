@@ -57,10 +57,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void publishNewPost(Post post, Tag tag) {
-        Post oldPost = getPostById(post.getId());
-        Date createDate = oldPost.getCreatedAt();
         Date date = new Date(System.currentTimeMillis());
-        post.setCreatedAt(createDate);
+        post.setCreatedAt(date);
         post.setPublished(true);
         post.setPublishedAt(date);
         postSaver(post,tag);
@@ -104,6 +102,7 @@ public class PostServiceImpl implements PostService {
         }
         return postRepository.findPaginatedAll(pageable);
     }
+
 
     @Override
     public List<Post> getAllPosts(String keyword) {
