@@ -28,7 +28,7 @@ public class Post {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "post_tag",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -38,7 +38,7 @@ public class Post {
 
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(
-            name = "post_comment",
+            name = "post_id",
             referencedColumnName = "id"
     )
     private List<Comment> comments;

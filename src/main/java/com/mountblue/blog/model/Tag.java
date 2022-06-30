@@ -18,7 +18,7 @@ public class Tag {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade ={CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH})
     @JoinTable(
             name = "post_tag",
             joinColumns = @JoinColumn(name = "tag_id"),

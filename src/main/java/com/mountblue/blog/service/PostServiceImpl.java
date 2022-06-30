@@ -103,6 +103,11 @@ public class PostServiceImpl implements PostService {
         return postRepository.findPaginatedAll(pageable);
     }
 
+    @Override
+    public void deletePostById(int id) {
+        postRepository.deleteById(id);
+    }
+
 
     @Override
     public List<Post> getAllPosts(String keyword) {

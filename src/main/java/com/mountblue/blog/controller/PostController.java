@@ -207,4 +207,10 @@ public class PostController {
         model.addAttribute("tag",postTag);
         return "updatepost";
     }
+
+    @GetMapping("/deletePost/{id}")
+    public String deletePost(@PathVariable(value = "id") int id){
+        postService.deletePostById(id);
+        return "redirect:/";
+    }
 }

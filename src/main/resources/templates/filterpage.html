@@ -43,19 +43,16 @@
 <!--    <a th:href="@{/draftPage}">Drafts</a>-->
 <main id="blogs">
         <span th:each="post : ${postList}">
-<!--            <span th:if="${post.isPublished() == true}">-->
                 <article>
                     <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
                         <h2 class="title" th:text="${post.title}">Post Title</h2>
                         <div class="timestamp">
                             <span th:text="${post.author}"></span>,
-                            <!--                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>-->
                             <span th:text="${post.publishedAt.toString()}"></span>
                         </div>
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>
                 </article>
-            <!--            </span>-->
         </span>
 </main>
 
@@ -77,6 +74,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

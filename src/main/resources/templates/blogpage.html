@@ -10,6 +10,7 @@
     <main id="post">
         <article>
             <a th:href="@{/updatePost/{id}(id=${post.id})}" class="btn" > Update</a>
+            <a th:href="@{/deletePost/{id}(id=${post.id})}" class="btn" > Delete</a>
             <h1 align="center" id="title" th:text="${post.title}">Blog post title</h1>
             <div align="center" class="blog-details">
                 <span th:text="${post.author}"></span>,
