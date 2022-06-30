@@ -28,6 +28,7 @@
             <select id="tagId" name="tagId" size="10" multiple>
                 <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
             </select>
+            <input type="hidden" name="keyword" th:value="${keyword}">
             <input type="submit" value="Filter">
         </form>
     </div>
@@ -41,7 +42,7 @@
                         <div class="timestamp">
                             <span th:text="${post.author}"></span>,
 <!--                            <span th:text="${#dates.format(post.createdAt, 'dd/MM/yyyy')}"></span>-->
-<!--                            <span th:text="${post.publishedAt.toString()}"></span>-->
+                            <span th:text="${post.publishedAt.toString()}"></span>
                         </div>
                         <p class="content" th:utext="${post.excerpt}"></p>
                     </a>

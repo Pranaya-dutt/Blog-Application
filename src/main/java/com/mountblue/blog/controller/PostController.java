@@ -7,6 +7,7 @@ import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Controller
 public class PostController {
@@ -48,59 +51,73 @@ public class PostController {
     @GetMapping("/filter/{pageNo}")
     public String findFilteredPaginated(@PathVariable(value = "pageNo") int pageNo,
                                         @RequestParam(value = "tagId",defaultValue = "") List<Integer> filterTags,
-//                                        @RequestParam("sortField") String sortField,
-//                                        @RequestParam("sortDir") String sortDir,
+                                        @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
+                                        @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
                                         Model model,
-                                        String keyword){
-        // [5,6,7,8,9,10,11]
+                                        @RequestParam(value = "keyword", defaultValue = "") String keyword){
         int pageSize = 5;
-
         List<Tag> tagList = tagService.getAllTags();
+
+        List<Post> searchedPostList = postService.getAllPosts(keyword);
+
         List<Post> filteredPostList = new java.util.ArrayList<>(Collections.emptyList());
         for(Integer tagId : filterTags){
             Tag tag = tagService.getTagById(tagId);
             List<Post> postByTag = tag.getPosts();
             for(Post post : postByTag){
-                if(!filteredPostList.contains(post) && post.isPublished()){
+                if(!filteredPostList.contains(post) && post.isPublished() && searchedPostList.contains(post)){
                     filteredPostList.add(post);
                 }
             }
         }
 
-//        for (Post post : filteredPostList){
-//            System.out.println(post.getTitle());
-//        }
+        List<Post> result = filteredPostList.stream()
+                .filter(post -> post.getTitle().contains(keyword) || post.getContent().contains(keyword) || post.getAuthor().contains(keyword))
+                .collect(Collectors.toList());
 
+        for (Post post: result){
+            System.out.println(post.getTitle());
+        }
+
+//        List<Sample> list = new ArrayList<Sample>();
+//        List<Sample> result = list.stream()
+//                .filter(a -> Objects.equals(a.value3, "three"))
+//                .collect(Collectors.toList());
+
+
+        boolean sortOrder;
+        if(sortDir.equals("asc")){
+            sortOrder=true;
+        } else {
+            sortOrder =false;
+        }
         PagedListHolder<Post> pagedListHolder = new PagedListHolder<>(filteredPostList);
+        pagedListHolder.setSort(new MutableSortDefinition(sortField,false,sortOrder));
+        pagedListHolder.resort();
         pagedListHolder.setPageSize(pageSize);
         pagedListHolder.setPage(pageNo-1);
+
         List<Post> postList = pagedListHolder.getPageList();
 
-//        for (Post post : postList){
-//            System.out.println(post.getTitle());
-//        }
         String filterString = "";
         if(!filterTags.isEmpty()){
             filterString = "?tagId=" + filterTags.get(0);
             for(int i = 1; i<filterTags.size();i++){
                 filterString += "&tagId=" + filterTags.get(i);
             }
-            System.out.println(filterString);
         }
-
-
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", pagedListHolder.getPageCount());
         model.addAttribute("totalItems", pagedListHolder.getNrOfElements());
-//        model.addAttribute("sortField", sortField);
-//        model.addAttribute("sortDir", sortDir);
-//        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
+        model.addAttribute("sortField", sortField);
+        model.addAttribute("sortDir", sortDir);
+        model.addAttribute("reverseSortDir", sortDir.equals("asc") ? "desc" : "asc");
         model.addAttribute("keyword", keyword);
         model.addAttribute("tagList", tagList);
         model.addAttribute("postList", postList);
         model.addAttribute("filterString", filterString);
-//        model.addAttribute("filtertags", filterTags);
+        model.addAttribute("filterTags", filterTags);
 
         return "filterpage";
     }
