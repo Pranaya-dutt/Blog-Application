@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,9 +20,10 @@ import java.util.Optional;
 public class PostServiceImpl implements PostService {
     @Autowired
     private PostRepository postRepository;
-
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    private TagService tagService;
 
     public void postSaver(Post post, Tag tag){
         Date date = new Date(System.currentTimeMillis());
@@ -35,7 +38,7 @@ public class PostServiceImpl implements PostService {
         String[] array = tagName.split(", ");
         for (String name:array){
             tag.addPost(post);
-            Tag tagDB = tagRepository.getTabByName(name);
+            Tag tagDB = tagRepository.getTagByName(name);
             if(tagDB == null){
                 Tag newTag = new Tag();
                 newTag.setName(name);
@@ -106,6 +109,33 @@ public class PostServiceImpl implements PostService {
     @Override
     public void deletePostById(int id) {
         postRepository.deleteById(id);
+    }
+
+    @Override
+    public List<Post> getFilteredPost(List<Integer> filterTags, List<Post> searchedPostList) {
+        List<Post> filteredPostList = new java.util.ArrayList<>(Collections.emptyList());
+        for(Integer tagId : filterTags){
+            Tag tag = tagService.getTagById(tagId);
+            List<Post> postByTag = tag.getPosts();
+            for(Post post : postByTag){
+                if(!filteredPostList.contains(post) && post.isPublished() && searchedPostList.contains(post)){
+                    filteredPostList.add(post);
+                }
+            }
+        }
+        return filteredPostList;
+    }
+
+    @Override
+    public String getFilterString(List<Integer> filterTags) {
+        String filterString = "";
+        if(!filterTags.isEmpty()){
+            filterString = "?tagId=" + filterTags.get(0);
+            for(int i = 1; i<filterTags.size();i++){
+                filterString += "&tagId=" + filterTags.get(i);
+            }
+        }
+        return filterString;
     }
 
 

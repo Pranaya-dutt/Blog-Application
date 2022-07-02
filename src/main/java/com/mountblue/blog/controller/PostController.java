@@ -57,33 +57,9 @@ public class PostController {
                                         @RequestParam(value = "keyword", defaultValue = "") String keyword){
         int pageSize = 5;
         List<Tag> tagList = tagService.getAllTags();
-
         List<Post> searchedPostList = postService.getAllPosts(keyword);
-
-        List<Post> filteredPostList = new java.util.ArrayList<>(Collections.emptyList());
-        for(Integer tagId : filterTags){
-            Tag tag = tagService.getTagById(tagId);
-            List<Post> postByTag = tag.getPosts();
-            for(Post post : postByTag){
-                if(!filteredPostList.contains(post) && post.isPublished() && searchedPostList.contains(post)){
-                    filteredPostList.add(post);
-                }
-            }
-        }
-
-        List<Post> result = filteredPostList.stream()
-                .filter(post -> post.getTitle().contains(keyword) || post.getContent().contains(keyword) || post.getAuthor().contains(keyword))
-                .collect(Collectors.toList());
-
-        for (Post post: result){
-            System.out.println(post.getTitle());
-        }
-
-//        List<Sample> list = new ArrayList<Sample>();
-//        List<Sample> result = list.stream()
-//                .filter(a -> Objects.equals(a.value3, "three"))
-//                .collect(Collectors.toList());
-
+        List<Post> filteredPostList = postService.getFilteredPost(filterTags,searchedPostList);
+        String filterString = postService.getFilterString(filterTags);
 
         boolean sortOrder;
         if(sortDir.equals("asc")){
@@ -91,21 +67,13 @@ public class PostController {
         } else {
             sortOrder =false;
         }
+
         PagedListHolder<Post> pagedListHolder = new PagedListHolder<>(filteredPostList);
         pagedListHolder.setSort(new MutableSortDefinition(sortField,false,sortOrder));
         pagedListHolder.resort();
         pagedListHolder.setPageSize(pageSize);
         pagedListHolder.setPage(pageNo-1);
-
         List<Post> postList = pagedListHolder.getPageList();
-
-        String filterString = "";
-        if(!filterTags.isEmpty()){
-            filterString = "?tagId=" + filterTags.get(0);
-            for(int i = 1; i<filterTags.size();i++){
-                filterString += "&tagId=" + filterTags.get(i);
-            }
-        }
 
         model.addAttribute("currentPage", pageNo);
         model.addAttribute("totalPages", pagedListHolder.getPageCount());
@@ -125,7 +93,7 @@ public class PostController {
     @GetMapping("/page/{pageNo}")
     public String findPaginated(@PathVariable(value = "pageNo") int pageNo,
                                 @RequestParam("sortField") String sortField,
-                                @RequestParam("sortDir") String sortDir,
+                                @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
                                 Model model,
                                 String keyword){
         int pageSize = 5;
@@ -147,11 +115,11 @@ public class PostController {
     }
 
     @GetMapping("/newpost")
-    public String addNewPost(Model postModel, Model tagModel){
+    public String addNewPost(Model model){
         Tag tag = new Tag();
         Post post = new Post();
-        postModel.addAttribute("post", post);
-        tagModel.addAttribute("tag", tag);
+        model.addAttribute("post", post);
+        model.addAttribute("tag", tag);
         return "newpost";
     }
 
