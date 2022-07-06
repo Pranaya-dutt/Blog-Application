@@ -1,16 +1,26 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymelef.org" lang="en">
+<html xmlns:th="https://www.thymelef.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
-    <link rel="stylesheet" th:href="@{/blogpage.css}">
+    <link rel="stylesheet" th:href="@{/css/blogpage.css}">
 </head>
 <body>
-    <h3 align="left" id="heading">My Blog Application</h3>
+    <div class="header">
+        <h1 align="left" id="heading"><a id="blogApp" th:href="@{/}">My Blog Application</a></h1>
+        <form id="form-login" sec:authorize="isAnonymous()" th:action="@{/signin}">
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <form id="form-logout" sec:authorize="isAuthenticated()" th:action="@{/logout}">
+            <button class="btn" type="submit">Logout</button>
+        </form>
+    </div>
     <main id="post">
         <article>
-            <a th:href="@{/updatePost/{id}(id=${post.id})}" class="btn" > Update</a>
-            <a th:href="@{/deletePost/{id}(id=${post.id})}" class="btn" > Delete</a>
+            <div th:if="${#authorization.expression('hasRole(''ADMIN'')') or post.author == username}">
+                <a th:href="@{/updatePost/{id}(id=${post.id})}" class="btn" > Update</a>
+                <a th:href="@{/deletePost/{id}(id=${post.id})}" class="btn" > Delete</a>
+            </div>
             <h1 align="center" id="title" th:text="${post.title}">Blog post title</h1>
             <div align="center" class="blog-details">
                 <span th:text="${post.author}"></span>,
@@ -19,35 +29,41 @@
             <p class="content" th:utext="${post.content}"></p>
         </article>
 
-        <div>
-            <form id="comment-form" action="#" th:action="@{{id}/saveComment(id=${post.id})}" th:object="${comment}" method="post">
-                <input type="hidden" th:field = "${comment.id}"/>
-                <input type="text"  name="name" th:value="${comment.name}" id="name" placeholder="Enter your name" required><br>
-                <input type="email" name="email" th:value="${comment.email}" id="email" placeholder="Enter your email" required><br>
-                <textarea name="text" th:field="*{text}" id="text" placeholder="Enter your comment here"></textarea><br>
-                <button type="submit" id="savebtn" value="save">Save Comment</button>
-            </form>
-        </div>
+        <div class="comment-area">
+            <div>
+                <form id="comment-form" action="#" th:action="@{{id}/saveComment(id=${post.id})}" th:object="${comment}" method="post">
+                    <h1>Add comment</h1>
+                    <hr>
+                    <input type="hidden" th:field = "${comment.id}"/>
+                    <div sec:authorize="isAnonymous()">
+                        <input type="text"  name="name" th:value="${comment.name}" id="name" placeholder="Enter your name" required><br>
+                        <input type="email" name="email" th:value="${comment.email}" id="email" placeholder="Enter your email" required><br>
+                    </div>
+                    <textarea name="text" th:field="*{text}" id="text" placeholder="Enter your comment here"></textarea><br>
+                    <button type="submit" id="savebtn" value="save">Save Comment</button>
+                </form>
+            </div>
 
-        <h3>Comment Section</h3>
-        <div class="comment-section">
-            <div th:each="comment : ${commentList}">
-                <div class="comment-box">
-                    <span class="timestamp">
-                        <b><span th:text="${comment.name}"></span>,
-                        <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span></b>
-                    </span>
-                    <p class="content" th:utext="${comment.text}"></p>
-                    <form th:action="@{/showPost/{postId}/updateComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
-                        <button type="submit" value="edit">Edit</button>
-                    </form>
-                    <form th:action="@{/showPost/{postId}/deleteComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
-                        <button type="submit" value="delete">Delete</button>
-                    </form>
+            <div class="comment-section">
+                <div th:each="comment : ${commentList}">
+                    <div class="comment-box">
+                        <span class="timestamp">
+                            <b><span th:text="${comment.name}"></span>,
+                            <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span></b>
+                        </span>
+                        <p class="content" th:utext="${comment.text}"></p>
+                        <div th:if="${#authorization.expression('hasRole(''ADMIN'')') or post.author == username}">
+                            <form th:action="@{/showPost/{postId}/updateComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                                <button class="btn" type="submit" value="edit">Edit</button>
+                            </form>
+                            <form th:action="@{/showPost/{postId}/deleteComment/{commentId}(postId=${post.id},commentId=${comment.id})}">
+                                <button class="btn" type="submit" value="delete">Delete</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
     </main>
 </body>
 </html>

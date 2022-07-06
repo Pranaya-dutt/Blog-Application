@@ -27,7 +27,6 @@ public class PostServiceImpl implements PostService {
 
     public void postSaver(Post post, Tag tag){
         Date date = new Date(System.currentTimeMillis());
-        post.setAuthor("Pranaya");
         if(post.getContent().length()>150){
             post.setExcerpt(post.getContent().substring(0,150)+"...");
         } else {
@@ -73,6 +72,7 @@ public class PostServiceImpl implements PostService {
         Date createDate = oldPost.getCreatedAt();
         Date publishDate = oldPost.getPublishedAt();
         Date date = new Date(System.currentTimeMillis());
+        post.setAuthor(oldPost.getAuthor());
         post.setUpdatedAt(date);
         post.setCreatedAt(createDate);
         post.setPublishedAt(publishDate);
@@ -85,6 +85,7 @@ public class PostServiceImpl implements PostService {
         Date createDate = oldPost.getCreatedAt();
         Date publishDate = oldPost.getPublishedAt();
         Date date = new Date(System.currentTimeMillis());
+        post.setAuthor(oldPost.getAuthor());
         post.setUpdatedAt(date);
         post.setPublished(true);
         post.setCreatedAt(createDate);
@@ -114,6 +115,9 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> getFilteredPost(List<Integer> filterTags, List<Post> searchedPostList) {
         List<Post> filteredPostList = new java.util.ArrayList<>(Collections.emptyList());
+        if(filterTags.isEmpty()){
+            return searchedPostList;
+        }
         for(Integer tagId : filterTags){
             Tag tag = tagService.getTagById(tagId);
             List<Post> postByTag = tag.getPosts();

@@ -23,6 +23,8 @@ input{
     width: 70%;
     border-radius: 0.2rem;
     height: 2rem;
+    display: inline-block;
+    background-color: #F5F5F5;
 }
 textarea{
     border: 0.12rem solid black;
@@ -33,6 +35,11 @@ textarea{
     resize: none;
     height: 28rem;
     border-radius: 0.2rem;
+    display: inline-block;
+    background-color: #F5F5F5;
+}
+label{
+    font-style:italic;
 }
 button{
     padding: 0.5rem 1rem;

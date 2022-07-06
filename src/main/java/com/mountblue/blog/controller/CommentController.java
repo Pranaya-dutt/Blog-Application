@@ -1,8 +1,10 @@
 package com.mountblue.blog.controller;
 
 import com.mountblue.blog.model.Comment;
+import com.mountblue.blog.model.CustomUserDetail;
 import com.mountblue.blog.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,8 +15,12 @@ public class CommentController {
     private CommentService commentService;
 
     @PostMapping("/showPost/{id}/saveComment")
-    public String saveComment(@PathVariable(value = "id") int id, @ModelAttribute("comment") Comment comment ){
+    public String saveComment(@PathVariable(value = "id") int id, @ModelAttribute("comment") Comment comment, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         comment.setPostId(id);
+        if(comment.getName() == null){
+            comment.setName(customUserDetail.getUsername());
+            comment.setEmail(customUserDetail.getEmail());
+        }
         commentService.saveComment(comment);
         return "redirect:/showPost/{id}";
     }

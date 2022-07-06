@@ -1,0 +1,109 @@
+article{
+    margin : 65px;
+    padding : 20px;
+    width : 90%;
+    display : inline-block;
+    border : 2px solid black;
+    border-radius:5px;
+    font-size:24px;
+}
+.header{
+    display: flex;
+    justify-content: spaced-evenly;
+}
+#heading{
+    margin : 10px;
+    padding : 20px;
+    display : inline-block;
+    width : 95%;
+    font-size: 64px;
+}
+a#blogApp {
+    color: black;
+}
+#title{
+    display : inline-block;
+    width : 100%;
+    font-size:32px;
+}
+#comment-form{
+    margin: 0 65px auto;
+    width: auto;
+    height: 400px;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 20px;
+}
+input[type=text], input[type=email], textarea {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  display: inline-block;
+  border: none;
+  background: #f1f1f1;
+}
+input[type=text]:focus, input[type=email]:focus, textarea {
+  background-color: #ddd;
+  outline: none;
+}
+.comment-area{
+    display:flex;
+    width: 95%;
+    margin-bottom:50px;
+}
+#form-login{
+    margin-top: 50px;
+    margin-right:50px;
+}
+#form-logout{
+    margin-top: 50px;
+    margin-right:50px;
+}
+.btn{
+    margin:5px;
+    width:60px;
+    padding: 5px;
+    border:1px solid black;
+    cursor: pointer;
+    background-color:rgb(211,208,208);
+}
+button:hover {
+  opacity: 0.8;
+}
+.comment-section{
+    margin: 0 auto;
+    max-height:450px;
+    max-width: 90%;
+    overflow-y:scroll;
+    width: -webkit-fill-available;
+}
+.comment-box{
+    height: 10%;
+    padding: 2%;
+    margin: 2%;
+    background-color: #ffff;
+    color: black;
+    border: 1px solid black;
+}
+
+#name, #email, #text{
+    width: 500px;
+    margin: 10px;
+}
+.blog-details{
+    font-style: italic;
+    font-size: 20px;
+}
+.content{
+    font-size: 24px;
+}
+button#savebtn{
+    background-color: lightgray;
+    color: black;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}

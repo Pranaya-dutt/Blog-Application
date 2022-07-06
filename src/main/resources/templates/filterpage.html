@@ -1,58 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymelef.org" lang="en">
+<html xmlns:th="https://www.thymelef.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" th:href="@{/homepage.css}">
+    <link rel="stylesheet" th:href="@{/css/homepage.css}">
 </head>
 <body>
-<div class="header">
-    <h1 align="left" id="heading">My Blog Application</h1>
-    <form id="search-form" th:action="@{/}">
-        <input type="hidden" name="sortDir" th:value="${sortDir}">
-        <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
-        <button type="submit">Search</button>
-    </form>
-
-    <form id="sort-form" th:action="@{'/filter/' + ${pageNo} + ${filterString}}">
-<!--        <input type="hidden" name="filterString" th:value="${filterString}">-->
-        <select id="selectedTag" name="tagId" multiple hidden>
-            <option selected th:each="tagId : ${filterTags}" th:value="${tagId}" th:text="${tagId}"></option>
-        </select>
-        <input type="hidden" name="sortField" th:value="publishedAt">
-        <select style="width:150px" id="sortDir" name="sortDir">
-            <option value="" disabled selected>Select order</option>
-            <option th:value="desc">Newest First</option>
-            <option th:value="asc">Oldest First</option>
-        </select>
-        <input type="hidden" name="keyword" th:value="${keyword}">
-        <input type="submit" value="Sort">
-    </form>
-<!--    <div>-->
-<!--        <span th:each="tagId : ${filterTags}"></span>-->
-<!--    </div>-->
-    <form id="filter-form" th:action="@{'/filter/' + ${pageNo}}">
-        <label>Select Filter Tags</label>
-        <select id="tagId" name="tagId" size="10" multiple>
-            <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
-        </select>
-        <input type="hidden" name="keyword" th:value="${keyword}">
-        <input type="submit" value="Filter">
-    </form>
-</div>
-<!--    <a th:href="@{/draftPage}">Drafts</a>-->
+    <div class="header">
+        <h1 align="left" id="heading"><a id="title" th:href="@{/}">My Blog Application</a></h1>
+        <form id="search-form" th:action="@{/}">
+            <input type="hidden" name="sortDir" th:value="${sortDir}">
+            <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
+            <button class="btn" type="submit">Search</button>
+        </form>
+        <form id="sort-form" th:action="@{'/filter/' + ${pageNo} + ${filterString}}">
+            <select id="selectedTag" name="tagId" multiple hidden>
+                <option selected th:each="tagId : ${filterTags}" th:value="${tagId}" th:text="${tagId}"></option>
+            </select>
+            <input type="hidden" name="sortField" th:value="publishedAt">
+            <select style="width:150px" id="sortDir" name="sortDir">
+                <option value="" disabled selected>Select order</option>
+                <option th:value="desc">Newest First</option>
+                <option th:value="asc">Oldest First</option>
+            </select>
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <button class="btn" type="submit" value="Sort">Sort</button>
+        </form>
+        <form id="filter-form" th:action="@{'/filter/' + ${pageNo}}">
+            <label>Select Filter Tags</label>
+            <select id="tagId" name="tagId" size="10" multiple>
+                <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
+            </select><br>
+            <input type="hidden" name="keyword" th:value="${keyword}">
+            <button class="btn" id="filter-btn" type="submit" value="Filter">Filter</button>
+        </form>
+        <form id="form-createNew"  sec:authorize="isAuthenticated()" th:action="@{/newpost}">
+            <button class="btn newPostBtn" type="submit"><p>Create New Post</p></button>
+        </form>
+        <form id="form-login" sec:authorize="isAnonymous()" th:action="@{/signin}">
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <form id="form-logout" sec:authorize="isAuthenticated()" th:action="@{/logout}">
+            <button class="btn" type="submit">Logout</button>
+        </form>
+    </div>
 <main id="blogs">
         <span th:each="post : ${postList}">
-                <article>
-                    <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
-                        <h2 class="title" th:text="${post.title}">Post Title</h2>
-                        <div class="timestamp">
-                            <span th:text="${post.author}"></span>,
-                            <span th:text="${post.publishedAt.toString()}"></span>
-                        </div>
-                        <p class="content" th:utext="${post.excerpt}"></p>
-                    </a>
-                </article>
+            <article>
+                <a th:href="@{/showPost/{id}(id=${post.id})}" class="card">
+                    <h2 class="title" th:text="${post.title}">Post Title</h2>
+                    <div class="timestamp">
+                        <span th:text="${post.author}"></span>,
+                        <span th:text="${post.publishedAt.toString()}"></span>
+                    </div>
+                    <p class="content" th:utext="${post.excerpt}"></p>
+                </a>
+            </article>
         </span>
 </main>
 

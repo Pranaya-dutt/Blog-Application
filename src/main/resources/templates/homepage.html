@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="https://www.thymelef.org" lang="en">
+<html xmlns:th="https://www.thymelef.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
-    <link rel="stylesheet" th:href="@{/homepage.css}">
+    <link rel="stylesheet" th:href="@{/css/homepage.css}">
 </head>
 <body>
     <div class="header">
-        <h1 align="left" id="heading">My Blog Application</h1>
+        <h1 align="left" id="heading"><a id="title" th:href="@{/}">My Blog Application</a></h1>
         <form id="search-form" th:action="@{/}">
             <input type="hidden" name="sortDir" th:value="${sortDir}">
             <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
-            <button type="submit">Search</button>
+            <button class="btn" type="submit">Search</button>
         </form>
         <form id="sort-form" th:action="@{'/page/' + ${currentPage}}">
             <input type="hidden" name="keyword" th:value="${keyword}">
@@ -21,15 +21,24 @@
                 <option th:value="desc">Newest First</option>
                 <option th:value="asc">Oldest First</option>
             </select>
-            <input type="submit" value="Sort">
+            <button class="btn" type="submit" value="Sort">Sort</button>
         </form>
         <form id="filter-form" th:action="@{'/filter/' + ${currentPage}}">
             <label>Select Filter Tags</label>
             <select id="tagId" name="tagId" size="10" multiple>
                 <option th:each="tag : ${tagList}" th:value="${tag.getId}" th:text="${tag.getName}"></option>
-            </select>
+            </select><br>
             <input type="hidden" name="keyword" th:value="${keyword}">
-            <input type="submit" value="Filter">
+            <button class="btn" id="filter-btn" type="submit" value="Filter">Filter</button>
+        </form>
+        <form id="form-createNew"  sec:authorize="isAuthenticated()" th:action="@{/newpost}">
+            <button class="btn newPostBtn" type="submit"><p>Create New Post</p></button>
+        </form>
+        <form id="form-login" sec:authorize="isAnonymous()" th:action="@{/signin}">
+            <button class="btn" type="submit">Login</button>
+        </form>
+        <form id="form-logout" sec:authorize="isAuthenticated()" th:action="@{/logout}">
+            <button class="btn" type="submit">Logout</button>
         </form>
     </div>
 <!--    <a th:href="@{/draftPage}">Drafts</a>-->

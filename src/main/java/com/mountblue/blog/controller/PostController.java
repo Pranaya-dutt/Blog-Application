@@ -1,6 +1,7 @@
 package com.mountblue.blog.controller;
 
 import com.mountblue.blog.model.Comment;
+import com.mountblue.blog.model.CustomUserDetail;
 import com.mountblue.blog.model.Post;
 import com.mountblue.blog.model.Tag;
 import com.mountblue.blog.service.CommentService;
@@ -11,6 +12,7 @@ import org.springframework.beans.support.MutableSortDefinition;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -115,22 +117,25 @@ public class PostController {
     }
 
     @GetMapping("/newpost")
-    public String addNewPost(Model model){
+    public String addNewPost(Model model,@AuthenticationPrincipal CustomUserDetail customUserDetail){
         Tag tag = new Tag();
         Post post = new Post();
+        model.addAttribute("customUserDetail", customUserDetail);
         model.addAttribute("post", post);
         model.addAttribute("tag", tag);
         return "newpost";
     }
 
     @PostMapping("/saveNewPost")
-    public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
+    public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag,  @AuthenticationPrincipal CustomUserDetail customUserDetail){
+        post.setAuthor(customUserDetail.getUsername());
         postService.saveNewPost(post, tag);
         return "redirect:/draftPage";
     }
 
     @PostMapping("/publishNewPost")
-    public String publishNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
+    public String publishNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag, @AuthenticationPrincipal CustomUserDetail customUserDetail){
+        post.setAuthor(customUserDetail.getUsername());
         postService.publishNewPost(post, tag);
         return "redirect:/";
     }
@@ -147,10 +152,13 @@ public class PostController {
     }
 
     @GetMapping("/showPost/{id}")
-    public String showPost(@PathVariable (value = "id") int id, Model model, Model commentModel){
+    public String showPost(@PathVariable (value = "id") int id, Model model, Model commentModel, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = postService.getPostById(id);
         Comment comment = new Comment();
         List<Comment> commentList = commentService.getCommentListByPostId(id);
+        if(customUserDetail != null){
+            model.addAttribute("username", customUserDetail.getUsername());
+        }
         model.addAttribute("post", post);
         commentModel.addAttribute("comment", comment);
         commentModel.addAttribute("commentList", commentList);
@@ -159,7 +167,7 @@ public class PostController {
 
 
     @GetMapping("/updatePost/{id}")
-    public String updatePost(@PathVariable (value = "id") int id, Model model){
+    public String updatePost(@PathVariable (value = "id") int id, Model model,@AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = postService.getPostById(id);
         model.addAttribute("post", post);
         Tag postTag = new Tag();
@@ -172,6 +180,7 @@ public class PostController {
             allTags += name;
         }
         postTag.setName(allTags);
+        model.addAttribute("customUserDetail", customUserDetail);
         model.addAttribute("tag",postTag);
         return "updatepost";
     }
