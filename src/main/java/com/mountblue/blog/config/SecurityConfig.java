@@ -21,8 +21,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/newpost","/updatePost/**","/deletePost/**","/showPost/{id}/updateComment/**", "/showPost/{postId}/deleteComment/**").authenticated()
+                .antMatchers("/newpost","/updatePost/**","/deletePost/**","/showPost/{id}/updateComment/{commentId}/**", "/showPost/{postId}/deleteComment/**").authenticated()
                 .and()
+//                .exceptionHandling().accessDeniedPage("/accessDenied")
+//                .and()
                 .formLogin()
                 .loginPage("/signin")
                 .loginProcessingUrl("/dologin")

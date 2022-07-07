@@ -11,14 +11,14 @@
     </div>
     <div class="form-content">
         <article>
-            <form th:object="${comment}" method="post">
+            <form th:object="${comment}" th:action="@{/showPost/{postId}/saveUpdatedComment/{commentId}(postId=${comment.postId},commentId=${comment.id})}" method="post">
                 <input type="hidden" th:field="*{id}"/>
                 <span class="timestamp">
                     <span th:text="${comment.name}"></span>,
                     <span th:text="${#dates.format(comment.createdAt, 'dd/MM/yyyy')}"></span>
                 </span><br>
                 <textarea name="text" th:field="*{text}" placeholder="Enter your comment here"></textarea><br>
-                <button type="submit" th:formaction="@{/showPost/{postId}/saveUpdatedComment/{commentId}(postId=${comment.postId},commentId=${comment.id})}">Save Comment</button>
+                <button type="submit">Save Comment</button>
             </form>
         </article>
     </div>

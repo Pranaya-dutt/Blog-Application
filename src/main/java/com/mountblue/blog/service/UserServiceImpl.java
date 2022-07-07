@@ -4,7 +4,9 @@ import com.mountblue.blog.model.Post;
 import com.mountblue.blog.model.Tag;
 import com.mountblue.blog.model.User;
 import com.mountblue.blog.repository.UserRepository;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -35,10 +37,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void saveNewUser(User user) {
+    public boolean saveNewUser(User user) {
         String password = user.getPassword();
         user.setPassword(this.bCryptPasswordEncoder.encode(password));
         user.setRole("ROLE_AUTHOR");
-        this.userRepository.save(user);
+        try{
+            this.userRepository.save(user);
+            return true;
+        }catch (ConstraintViolationException | DataIntegrityViolationException exception){
+            return false;
+        }
     }
 }

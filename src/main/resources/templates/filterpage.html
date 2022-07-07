@@ -13,7 +13,7 @@
             <input type="text" name="keyword" th:value="${keyword}" placeholder="Search keyword">
             <button class="btn" type="submit">Search</button>
         </form>
-        <form id="sort-form" th:action="@{'/filter/' + ${pageNo} + ${filterString}}">
+        <form id="sort-form" th:action="@{'/filter/' + ${pageNo}}">
             <select id="selectedTag" name="tagId" multiple hidden>
                 <option selected th:each="tagId : ${filterTags}" th:value="${tagId}" th:text="${tagId}"></option>
             </select>
@@ -62,17 +62,17 @@
 <div th:if="${totalPages > 1}">
     <div class="row">
         <div class="col btn">
-            <a th:if="${currentPage > 1}" th:href="@{'/filter/' + ${currentPage - 1} + ${filterString} + '&sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword}}">Previous</a>
+            <a th:if="${currentPage > 1}" th:href="@{'/filter/' + ${currentPage - 1} + '?sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword} + ${filterString}}">Previous</a>
             <span th:unless="${currentPage > 1}">Previous</span>
         </div>
         <div class="col">
                 <span th:each="i: ${#numbers.sequence(1, totalPages)}">
-                    <a th:if="${currentPage != i}" th:href="@{'/filter/' + ${i} + ${filterString} + '&sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword}}">[[${i}]]</a>
+                    <a th:if="${currentPage != i}" th:href="@{'/filter/' + ${i} + '?sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword} + ${filterString}}">[[${i}]]</a>
                     <span th:unless="${currentPage != i}">[[${i}]]</span>  &nbsp; &nbsp;
                 </span>
         </div>
         <div class="col btn nxt">
-            <a th:if="${currentPage < totalPages}" th:href="@{'/filter/' + ${currentPage + 1}+ ${filterString} + '&sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword}}">Next</a>
+            <a th:if="${currentPage < totalPages}" th:href="@{'/filter/' + ${currentPage + 1} + '?sortField=publishedAt' + '&sortDir=' + ${sortDir} + '&keyword=' + ${keyword} + ${filterString}}">Next</a>
             <span th:unless="${currentPage < totalPages}">Next</span>
         </div>
     </div>

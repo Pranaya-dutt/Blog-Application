@@ -13,7 +13,7 @@
             <h1>Login</h1>
             <hr>
             <div th:if="${param.error}">
-                Invalid Username and Password
+                <p id="error-msg">Invalid Username and Password</p>
             </div>
             <label><b>Username</b></label>
             <input type="text" placeholder="Enter Username" name="username" required>
@@ -23,7 +23,6 @@
 
             <button type="submit">Login</button>
         </div>
-
         <div class="container signup">
             <p>New User? <a th:href="@{/signup}">Sign up</a>.</p>
         </div>

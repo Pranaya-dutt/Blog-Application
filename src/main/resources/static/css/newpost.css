@@ -25,6 +25,8 @@ input{
     height: 2rem;
     display: inline-block;
     background-color: #F5F5F5;
+    font-size: 20px;
+    font-family: sans-serif;
 }
 textarea{
     border: 0.12rem solid black;
@@ -37,9 +39,13 @@ textarea{
     border-radius: 0.2rem;
     display: inline-block;
     background-color: #F5F5F5;
+    font-family: sans-serif;
+    font-size: 20px;
 }
 label{
     font-style:italic;
+    font-size: 20px;
+    font-family: sans-serif;
 }
 button{
     padding: 0.5rem 1rem;

@@ -2,7 +2,9 @@ package com.mountblue.blog.controller;
 
 import com.mountblue.blog.model.Comment;
 import com.mountblue.blog.model.CustomUserDetail;
+import com.mountblue.blog.model.Post;
 import com.mountblue.blog.service.CommentService;
+import com.mountblue.blog.service.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+
+    @Autowired
+    private PostService postService;
 
     @PostMapping("/showPost/{id}/saveComment")
     public String saveComment(@PathVariable(value = "id") int id, @ModelAttribute("comment") Comment comment, @AuthenticationPrincipal CustomUserDetail customUserDetail){
@@ -33,10 +38,10 @@ public class CommentController {
     }
 
     @PostMapping("/showPost/{postId}/saveUpdatedComment/{id}")
-    public String saveUpdatedComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "id") int id, @RequestParam("text") String text){
-        Comment Comment = commentService.getCommentById(id);
-        Comment.setText(text);
-        commentService.updateComment(Comment);
+    public String saveUpdatedComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "id") int id, @RequestParam("text") String text, @AuthenticationPrincipal CustomUserDetail customUserDetail){
+        Comment comment = commentService.getCommentById(id);
+        comment.setText(text);
+        commentService.updateComment(comment);
         return "redirect:/showPost/{postId}";
     }
 

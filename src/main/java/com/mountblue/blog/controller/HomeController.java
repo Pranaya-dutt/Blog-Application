@@ -53,7 +53,7 @@ public class HomeController {
                                         @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
                                         Model model,
                                         @RequestParam(value = "keyword", defaultValue = "") String keyword){
-        int pageSize = 5;
+        int pageSize = 10;
         List<Tag> tagList = tagService.getAllTags();
         List<Post> searchedPostList = postService.getAllPosts(keyword);
         List<Post> filteredPostList = postService.getFilteredPost(filterTags,searchedPostList);
@@ -94,7 +94,7 @@ public class HomeController {
                                 @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
                                 Model model,
                                 String keyword){
-        int pageSize = 5;
+        int pageSize = 10;
         Page<Post> page = postService.findPaginated(pageNo,pageSize,keyword,sortField,sortDir);
         List<Post> postList = page.getContent();
         List<Tag> tagList = tagService.getAllTags();

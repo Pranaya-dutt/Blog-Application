@@ -134,7 +134,7 @@ public class PostServiceImpl implements PostService {
     public String getFilterString(List<Integer> filterTags) {
         String filterString = "";
         if(!filterTags.isEmpty()){
-            filterString = "?tagId=" + filterTags.get(0);
+            filterString = "&tagId=" + filterTags.get(0);
             for(int i = 1; i<filterTags.size();i++){
                 filterString += "&tagId=" + filterTags.get(i);
             }

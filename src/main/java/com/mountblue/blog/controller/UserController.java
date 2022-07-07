@@ -24,7 +24,16 @@ public class UserController {
 
     @PostMapping("/saveNewUser")
     public String saveNewUser(@ModelAttribute("user") User user){
-        userService.saveNewUser(user);
-        return "redirect:/signin";
+        boolean isSavedSuccessfully = userService.saveNewUser(user);
+        if(isSavedSuccessfully){
+            return "redirect:/signin";
+        } else {
+            return "redirect:/signup?error";
+        }
     }
+
+//    @GetMapping("/accessDenied")
+//    public String accessDenied(){
+//        return "accessdenied";
+//    }
 }

@@ -42,7 +42,9 @@ article{
     margin-top: 50px;
     margin-right:50px;
 }
-
+#tagId{
+    width:160px;
+}
 #form-createNew{
     width: auto;
     margin-top: 50px;
