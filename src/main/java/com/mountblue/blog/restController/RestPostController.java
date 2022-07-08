@@ -1,4 +1,4 @@
-package com.mountblue.blog.controller;
+package com.mountblue.blog.restController;
 
 import com.mountblue.blog.model.*;
 import com.mountblue.blog.service.CommentService;
@@ -24,7 +24,7 @@ public class RestPostController {
     @Autowired
     private CommentService commentService;
 
-    @PostMapping("/post")
+    @PostMapping("/posts")
     public Post publishNewPost(@RequestBody RequestModel requestModel, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = requestModel.getPost();
         Tag tag = requestModel.getTag();
@@ -33,7 +33,7 @@ public class RestPostController {
         return post;
     }
 
-    @PutMapping("/post/{id}")
+    @PutMapping("/posts/{id}")
     public String publishUpdatePost(@PathVariable(value = "id") int id,@RequestBody RequestModel requestModel, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post oldPost = postService.getPostById(id);
         if(!oldPost.getAuthor().equals(customUserDetail.getUsername()) && !customUserDetail.getUsername().equals("Pranaya")){
@@ -46,13 +46,13 @@ public class RestPostController {
         return "Post Updated";
     }
 
-    @GetMapping("/post/{id}")
+    @GetMapping("/posts/{id}")
     public Post showPost(@PathVariable (value = "id") int id){
         Post post = postService.getPostById(id);
         return post;
     }
 
-    @DeleteMapping("/post/{id}")
+    @DeleteMapping("/posts/{id}")
     public String deletePost(@PathVariable(value = "id") int id, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = postService.getPostById(id);
         System.out.println(customUserDetail.getUsername());

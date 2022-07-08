@@ -1,4 +1,4 @@
-package com.mountblue.blog.controller;
+package com.mountblue.blog.restController;
 
 import com.mountblue.blog.model.Comment;
 import com.mountblue.blog.model.CustomUserDetail;
@@ -17,7 +17,7 @@ public class RestCommentController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/post/{postId}/comment")
+    @PostMapping("/posts/{postId}/comments")
     public Post saveComment(@PathVariable(value = "postId") int postId, @RequestBody Comment comment, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         comment.setPostId(postId);
         if(comment.getName() == null){
@@ -29,7 +29,7 @@ public class RestCommentController {
         return post;
     }
 
-    @PutMapping("/post/{postId}/comment/{commentId}")
+    @PutMapping("/posts/{postId}/comments/{commentId}")
     public String saveUpdatedComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @RequestBody String text, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = postService.getPostById(postId);
         if(!customUserDetail.getUsername().equals(post.getAuthor()) && !customUserDetail.getUsername().equals("Pranaya")){
@@ -41,7 +41,7 @@ public class RestCommentController {
         return "Comment Updated";
     }
 
-    @DeleteMapping("/post/{postId}/comment/{commentId}")
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
     public String deleteComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @AuthenticationPrincipal CustomUserDetail customUserDetail){
         Post post = postService.getPostById(postId);
         if(!customUserDetail.getUsername().equals(post.getAuthor()) && !customUserDetail.getUsername().equals("Pranaya")){

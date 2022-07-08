@@ -1,4 +1,4 @@
-package com.mountblue.blog.controller;
+package com.mountblue.blog.restController;
 
 import com.mountblue.blog.model.Post;
 import com.mountblue.blog.service.PostService;

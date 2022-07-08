@@ -1,4 +1,4 @@
-package com.mountblue.blog.controller;
+package com.mountblue.blog.restController;
 
 import com.mountblue.blog.model.User;
 import com.mountblue.blog.service.UserService;
@@ -13,14 +13,7 @@ public class RestUserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/signup")
-    public String showSignUpPage(Model model){
-        User user = new User();
-        model.addAttribute("user",user);
-        return "signuppage";
-    }
-
-    @PostMapping("/saveNewUser")
+    @PostMapping("/users")
     public String saveNewUser(@RequestBody User user){
         boolean isSavedSuccessfully = userService.saveNewUser(user);
         if(isSavedSuccessfully){
@@ -29,9 +22,4 @@ public class RestUserController {
             return "User Already Exist";
         }
     }
-
-//    @GetMapping("/accessDenied")
-//    public String accessDenied(){
-//        return "accessdenied";
-//    }
 }
