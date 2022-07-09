@@ -17,4 +17,5 @@ public interface PostService {
     void deletePostById(int id);
     List<Post> getFilteredPost(List<Integer> filterTags, List<Post> searchedPostList);
     String getFilterString(List<Integer> filterTags);
+    Page<Post> findPaginatedRestApi(int pageNo, int pageSize, String sortField, String sortDirection, String search, List<Integer> tagIds);
 }

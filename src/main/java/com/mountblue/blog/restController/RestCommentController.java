@@ -1,5 +1,6 @@
 package com.mountblue.blog.restController;
 
+import com.mountblue.blog.exceptionHandling.AccessDeniedException;
 import com.mountblue.blog.model.Comment;
 import com.mountblue.blog.model.CustomUserDetail;
 import com.mountblue.blog.model.Post;
@@ -30,25 +31,33 @@ public class RestCommentController {
     }
 
     @PutMapping("/posts/{postId}/comments/{commentId}")
-    public String saveUpdatedComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @RequestBody String text, @AuthenticationPrincipal CustomUserDetail customUserDetail){
+    public Post saveUpdatedComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @RequestBody String text, @AuthenticationPrincipal CustomUserDetail customUserDetail) throws Exception {
         Post post = postService.getPostById(postId);
         if(!customUserDetail.getUsername().equals(post.getAuthor()) && !customUserDetail.getUsername().equals("Pranaya")){
-            return "You are not allowed to update this comment";
+            throw new AccessDeniedException("You are not allowed to update this comment");
         }
         Comment comment = commentService.getCommentById(commentId);
+        if(comment.getPostId()!=postId){
+            throw new Exception("Comment does't belong to this post.");
+        }
         comment.setText(text);
         commentService.updateComment(comment);
-        return "Comment Updated";
+        return post;
     }
 
     @DeleteMapping("/posts/{postId}/comments/{commentId}")
-    public String deleteComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @AuthenticationPrincipal CustomUserDetail customUserDetail){
+    public Post deleteComment(@PathVariable(value = "postId") int postId,@PathVariable(value = "commentId") int commentId, @AuthenticationPrincipal CustomUserDetail customUserDetail) throws Exception {
         Post post = postService.getPostById(postId);
         if(!customUserDetail.getUsername().equals(post.getAuthor()) && !customUserDetail.getUsername().equals("Pranaya")){
-            return "You are not allowed to delete this comment";
+            throw new AccessDeniedException("You are not allowed to delete this comment");
+//            return "You are not allowed to delete this comment";
         }
         Comment comment= commentService.getCommentById(commentId);
+        if(comment.getPostId()!=postId){
+            throw new Exception("Comment doesn't belong to this post.");
+        }
         commentService.deleteComment(comment);
-        return "Comment Deleted";
+//        return "Comment Deleted";
+        return post;
     }
 }

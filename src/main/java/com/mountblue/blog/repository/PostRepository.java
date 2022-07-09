@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -22,4 +23,11 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 
     @Query(value = "select * from posts where is_published=true", nativeQuery = true)
     List<Post> findAll();
+
+    @Query(value = "select * from posts where is_published=true and id IN"
+            + " (SELECT posts.id FROM posts"
+            + " INNER JOIN post_tag ON posts.id=post_tag.post_id INNER JOIN tags ON tags.id = post_tag.tag_id"
+            + " WHERE  (lower(title) like %:search% or lower(content) like %:search% or lower(author) like %:search%)"
+            + " and tags.id In :tagIds)", nativeQuery = true)
+    Page<Post> findFilteredPostsWithRestApi(Pageable pageable, @Param("search") String search, @Param("tagIds") List<Integer> tagIds);
 }

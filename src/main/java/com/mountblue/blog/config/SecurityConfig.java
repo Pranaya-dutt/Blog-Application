@@ -26,6 +26,8 @@ public class SecurityConfig {
                 .and()
                 .httpBasic()
                 .and()
+                .exceptionHandling().accessDeniedPage("/error")
+                .and()
                 .formLogin()
                 .loginPage("/signin")
                 .loginProcessingUrl("/dologin")

@@ -1,5 +1,6 @@
 package com.mountblue.blog.restController;
 
+import com.mountblue.blog.exceptionHandling.PostNotFoundException;
 import com.mountblue.blog.model.*;
 import com.mountblue.blog.service.CommentService;
 import com.mountblue.blog.service.PostService;
@@ -48,8 +49,12 @@ public class RestPostController {
 
     @GetMapping("/posts/{id}")
     public Post showPost(@PathVariable (value = "id") int id){
-        Post post = postService.getPostById(id);
-        return post;
+        try{
+            Post post = postService.getPostById(id);
+            return post;
+        }catch (NullPointerException nullPointerException){
+            throw new PostNotFoundException("Post not found with Id: " + id);
+        }
     }
 
     @DeleteMapping("/posts/{id}")

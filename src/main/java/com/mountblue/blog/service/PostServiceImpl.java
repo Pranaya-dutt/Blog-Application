@@ -108,6 +108,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public Page<Post> findPaginatedRestApi(int pageNo, int pageSize, String sortField, String sortDirection, String search, List<Integer> tagIds) {
+        Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortField).ascending() : Sort.by(sortField).descending();
+        Pageable pageable = PageRequest.of(pageNo-1,pageSize, sort);
+        return postRepository.findFilteredPostsWithRestApi(pageable,search,tagIds);
+    }
+
+    @Override
     public void deletePostById(int id) {
         postRepository.deleteById(id);
     }
@@ -157,9 +164,9 @@ public class PostServiceImpl implements PostService {
         Post post = null;
         if(optional.isPresent()){
             post = optional.get();
+            return post;
         } else {
             throw new RuntimeException("Post not found with id : " +id);
         }
-        return post;
     }
 }

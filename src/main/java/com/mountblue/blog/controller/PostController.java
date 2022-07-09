@@ -67,7 +67,12 @@ public class PostController {
 
     @GetMapping("/showPost/{id}")
     public String showPost(@PathVariable (value = "id") int id, Model model, Model commentModel, @AuthenticationPrincipal CustomUserDetail customUserDetail){
-        Post post = postService.getPostById(id);
+        Post post;
+        try{
+            post = postService.getPostById(id);
+        } catch (Exception exception){
+            return "error";
+        }
         Comment comment = new Comment();
         List<Comment> commentList = commentService.getCommentListByPostId(id);
         if(customUserDetail != null){

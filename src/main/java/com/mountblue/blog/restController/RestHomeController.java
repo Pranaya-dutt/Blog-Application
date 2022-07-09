@@ -1,11 +1,11 @@
 package com.mountblue.blog.restController;
 
 import com.mountblue.blog.model.Post;
+import com.mountblue.blog.model.Tag;
 import com.mountblue.blog.service.PostService;
 import com.mountblue.blog.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.support.MutableSortDefinition;
-import org.springframework.beans.support.PagedListHolder;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,38 +21,18 @@ public class RestHomeController {
     @GetMapping("/posts")
     public List<Post> findFilteredPaginated(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
                                         @RequestParam(value = "tagId",defaultValue = "") List<Integer> filterTags,
-                                        @RequestParam(value = "sortField", defaultValue = "publishedAt") String sortField,
+                                        @RequestParam(value = "sortField", defaultValue = "published_at") String sortField,
                                         @RequestParam(value = "order", defaultValue = "asc") String order,
                                         @RequestParam(value = "search", defaultValue = "") String search){
         int pageSize = 10;
-        List<Post> searchedPostList = postService.getAllPosts(search);
-        List<Post> filteredPostList = postService.getFilteredPost(filterTags,searchedPostList);
-
-        boolean sortOrder;
-        if(order.equals("asc")){
-            sortOrder=true;
-        } else {
-            sortOrder =false;
+        if(filterTags.isEmpty()){
+            List<Tag> allTag = tagService.getAllTags();
+            for(Tag tag : allTag){
+                filterTags.add(tag.getId());
+            }
         }
-
-        PagedListHolder<Post> pagedListHolder = new PagedListHolder<>(filteredPostList);
-        pagedListHolder.setSort(new MutableSortDefinition(sortField,false,sortOrder));
-        pagedListHolder.resort();
-        pagedListHolder.setPageSize(pageSize);
-        pagedListHolder.setPage(pageNo-1);
-        List<Post> postList = pagedListHolder.getPageList();
-
+        Page<Post> page = postService.findPaginatedRestApi(pageNo,pageSize,sortField,order,search,filterTags);
+        List<Post> postList = page.getContent();
         return postList;
     }
-
-//    @GetMapping("/posts")
-//    public List<Post> findPaginated(@RequestParam(value = "pageNo", defaultValue = "1") int pageNo,
-//                                    @RequestParam(value = "sortField", defaultValue = "published_at") String sortField,
-//                                    @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir,
-//                                    @Param(value = "search") String search){
-//        int pageSize = 10;
-//        Page<Post> page = postService.findPaginated(pageNo,pageSize,search,sortField,sortDir);
-//        List<Post> postList = page.getContent();
-//        return postList;
-//    }
 }
