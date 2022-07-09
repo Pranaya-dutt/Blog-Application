@@ -44,7 +44,7 @@ public class PostController {
     public String saveNewPost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag,  @AuthenticationPrincipal CustomUserDetail customUserDetail){
         post.setAuthor(customUserDetail.getUsername());
         postService.saveNewPost(post, tag);
-        return "redirect:/draftPage";
+        return "redirect:/";
     }
 
     @PostMapping("/publishNewPost")
@@ -57,7 +57,7 @@ public class PostController {
     @PostMapping("/saveUpdatePost")
     public String saveUpdatePost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
         postService.saveUpdatePost(post, tag);
-        return "redirect:/draftPage";
+        return "redirect:/";
     }
     @PostMapping("/publishUpdatePost")
     public String publishUpdatePost(@ModelAttribute("post") Post post, @ModelAttribute("tag") Tag tag){
